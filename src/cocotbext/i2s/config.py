@@ -7,7 +7,7 @@ class I2sConfig:
     """I2S configuration container."""
 
     # TODO: Define actual configuration parameters when needed.
-    ...
+    pass
     
 
 default_config = I2sConfig()
