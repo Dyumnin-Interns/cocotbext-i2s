@@ -1,7 +1,7 @@
 """Bus creator."""
 import cocotb
 from cocotb_bus import Bus
-
+from typing import ClassVar
 
 class I2sBus(Bus):
       """For most cases the defaault bus creator in cocotb_bus is ok. Some protocols have edge cases that need to be handled here.
@@ -10,7 +10,7 @@ class I2sBus(Bus):
       2. relationship between signals that need to be checked e.g. byte_enable == width_of(data)/8
       3. Depending on version/profile have different lists of signals.
       """
-      _signals:list[str]=[]
+      _signals: ClassVar[list[str]] = []
       def __init__(self, dut, prefix,
                    bus_separator="_", case_insensitive=False,
                    array_idx=None):
