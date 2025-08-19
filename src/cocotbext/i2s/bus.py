@@ -14,8 +14,8 @@ class I2sBus(Bus):
     """
 
     _signals: ClassVar[list[str]] = []
-
-    def __init__(self, dut, prefix, bus_separator="_", case_insensitive=False, array_idx=None):
+def __init__(self, dut, prefix, *, bus_separator="_", case_insensitive=False, array_idx=None):
+   
         """
         Initialize the I2S bus wrapper.
 
