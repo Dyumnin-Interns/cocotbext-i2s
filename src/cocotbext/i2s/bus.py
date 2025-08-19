@@ -3,6 +3,7 @@ import cocotb
 from cocotb_bus import Bus
 from typing import ClassVar
 
+
 class I2sBus(Bus):
       """For most cases the defaault bus creator in cocotb_bus is ok. Some protocols have edge cases that need to be handled here.
 
