@@ -10,7 +10,7 @@ class I2sBus(Bus):
 
     _signals: ClassVar[list[str]] = []
 
-    def __init__(  # noqa: D107
+    def __init__(
         self,
         dut,
         prefix,
