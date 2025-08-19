@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from importlib.metadata import version as pkgversion
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
+from git_changelog.cli import main as git_changelog
 
 from duty import duty
 from duty.callables import coverage, mkdocs, mypy, pytest, ruff
