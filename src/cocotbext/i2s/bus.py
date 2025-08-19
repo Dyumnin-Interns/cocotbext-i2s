@@ -12,8 +12,7 @@ class I2sBus(Bus):
       3. Depending on version/profile have different lists of signals.
       """
       _signals: ClassVar[list[str]] = []
-      def __init__(self, dut, prefix,
-                   bus_separator="_", case_insensitive=False,
+      def __init__(self, dut, prefix, bus_separator="_", case_insensitive=False,
                    array_idx=None):
           super().__init__(entity=dut,
                            name=prefix,signals=_signals,optional_signals=[],
