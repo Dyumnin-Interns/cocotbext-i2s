@@ -52,7 +52,6 @@ def changelog(ctx: Context) -> None:
     Parameters:
         ctx: The context instance (passed automatically).
     """
-    from git_changelog.cli import main as git_changelog
 
     ctx.run(git_changelog, args=[[]], title="Updating changelog")
 
