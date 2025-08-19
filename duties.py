@@ -266,7 +266,7 @@ def cov(ctx: Context) -> None:
 
 
 @duty
-def test(ctx: Context, match: str = "") -> None:
+def test(ctx: Context, match: str) -> None:
     """Run the test suite.
 
     Parameters:
