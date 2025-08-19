@@ -1,5 +1,3 @@
-import cocotb
-
 """Configuration utilities for the I2S driver."""
 
 
