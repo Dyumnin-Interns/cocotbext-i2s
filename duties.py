@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from importlib.metadata import version as pkgversion
 from pathlib import Path
 from typing import TYPE_CHECKING, Iterator
+from git_changelog.cli import main as git_changelog
 
 from duty import duty
 from duty.callables import coverage, mkdocs, mypy, pytest, ruff
@@ -51,8 +52,6 @@ def changelog(ctx: Context) -> None:
     Parameters:
         ctx: The context instance (passed automatically).
     """
-    from git_changelog.cli import main as git_changelog
-
     ctx.run(git_changelog, args=[[]], title="Updating changelog")
 
 
@@ -267,7 +266,7 @@ def cov(ctx: Context) -> None:
 
 
 @duty
-def test(ctx: Context, match: str = "") -> None:
+def test(ctx: Context, match: str) -> None:
     """Run the test suite.
 
     Parameters:

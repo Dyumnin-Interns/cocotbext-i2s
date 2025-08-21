@@ -1,21 +1,42 @@
+"""I2S driver implementation for cocotb."""
+
 from .config import default_config
+
+
 class I2sDriver:
+    """Driver for interacting with an I2S bus in cocotb testbenches."""
 
-        def __init__(self,bus,config=default_config,name=None):
-               self.bus=bus
-               self.config=config
-               pass
+    def __init__(self, bus, config=default_config, name: str | None = None) -> None:
+        """Initialize the I2S driver.
 
-        async def write(self,address:int, data:bytes):
-                pass
+        Args:
+            bus: I2S bus instance.
+            config (I2sConfig, optional): Configuration object for the bus.
+                Defaults to `default_config`.
+            name (str, optional): Optional driver name. Defaults to None.
+        """
+        self.bus = bus
+        self.config = config
+        self.name = name
 
-        async def read(self,address:int,numBytes:int):
-                pass
+    async def write(self, address: int, data: bytes) -> None:
+        """Write data to a given address over the I2S bus."""
+        raise NotImplementedError("I2S write method not implemented yet.")
 
-        async def _txrx(self):
-                pass
+    async def read(self, address: int, num_bytes: int) -> bytes:
+        """Read data from a given address over the I2S bus."""
+        raise NotImplementedError("I2S read method not implemented yet.")
 
-        def add_callback(self, compare_fn):
-                """Callback into scoreboard."""
-                pass
+    async def _txrx(self) -> None:
+        """Internal transmit/receive coroutine for the I2S driver.
+
+        This method handles low-level TX/RX operations asynchronously.
+        """
+        raise NotImplementedError("I2S TX/RX coroutine not implemented yet.")
+
+    def add_callback(self, compare_fn) -> None:
+        """Register a callback into the scoreboard."""
+        raise NotImplementedError("Callback mechanism not implemented yet.")
+
+
 
