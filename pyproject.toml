@@ -13,7 +13,7 @@ classifiers = ["Development Status :: 4 - Beta",
 "Programming Language :: Python :: 3.8",
 ]
 version="2024.05.25"
-dependencies = ["cocotb"]
+dependencies = ["cocotb", "mkdocs-callouts>=1.16.0", "markdown-exec>=1.11.0"]
 authors = [{name = "Vijayvithal Jahagirdar", email = "jvs@dyumnin.com"}]
 maintainers = [{name = "Vijayvithal Jahagirdar", email = "jvs@dyumnin.com"}]
 [tool.pytest.ini_options]
@@ -21,11 +21,7 @@ log_cli = true
 log_cli_level = "INFO"
 log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
 log_cli_date_format = "%Y-%m-%d %H:%M:%S"
-[project.urls]
-Homepage = "https://dyumnin.com/cocotbext_i2s"
-Repository = "https://github.com/dyumnin/cocotbext_i2s.git"
-Issues = "https://github.com/dyumnin/cocotbext_i2s/issues"
-Documentation = "https://dyumnin.github.io/cocotbext_i2s"
+
 [tool.pdm]
 distribution = true
 
@@ -76,4 +72,14 @@ typing = [
 ]
 security = [
     "safety>=2.3",
+]
+[project.urls]
+Homepage = "https://dyumnin.com/cocotbext_i2s"
+Repository = "https://github.com/dyumnin/cocotbext_i2s.git"
+Issues = "https://github.com/dyumnin/cocotbext_i2s/issues"
+Documentation = "https://dyumnin.github.io/cocotbext_i2s"
+
+[dependency-groups]
+dev = [
+    "cocotb-bus>=0.2.1",
 ]

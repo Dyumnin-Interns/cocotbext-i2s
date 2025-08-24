@@ -1,0 +1,3 @@
+[mkdocs.plugins]
+coverage = mkdocs_coverage.plugin:MkDocsCoveragePlugin
+

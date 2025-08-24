@@ -4,7 +4,7 @@ site_url: "https://dyumnin.github.io/cocotbext_i2s"
 repo_url: "https://github.com/dyumnin/cocotbext_i2s"
 repo_name: "dyumnin/cocotbext_i2s"
 site_dir: "site"
-watch: [mkdocs.yml, README.md, CONTRIBUTING.md, CHANGELOG.md, src/cocotbext/i2s/, src/cocotbext/i2s/templates]
+watch: [mkdocs.yml, README.md, CONTRIBUTING.md, CHANGELOG.md, src/cocotbext/i2s/] #src/cocotbext/i2s/templates]
 copyright: Copyright &copy; 2024 Vijayvithal Jahagirdar
 edit_uri: edit/main/docs/
 
@@ -73,7 +73,6 @@ extra_css:
 markdown_extensions:
 - attr_list
 - admonition
-- mkdocs-callouts
 - footnotes
 - pymdownx.emoji:
     emoji_index: !!python/name:material.extensions.emoji.twemoji
@@ -96,6 +95,7 @@ markdown_extensions:
 plugins:
 - search
 - markdown-exec
+- callouts
 - gen-files:
     scripts:
     - scripts/gen_ref_nav.py
@@ -124,6 +124,7 @@ plugins:
           show_symbol_type_toc: true
           signature_crossrefs: true
           summary: true
+          show_bases: false   # 👈 this silences the cocotb_bus.Bus warning
 - git-committers:
     enabled: !ENV [DEPLOY, false]
     repository: dyumnin/cocotbext_i2s

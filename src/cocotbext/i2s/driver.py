@@ -1,12 +1,24 @@
 """I2S driver implementation for cocotb."""
 
-from .config import default_config
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Callable
+
+from .config import I2sConfig, default_config
+
+if TYPE_CHECKING:
+    from .bus import I2sBus
 
 
 class I2sDriver:
     """Driver for interacting with an I2S bus in cocotb testbenches."""
 
-    def __init__(self, bus, config=default_config, name: str | None = None) -> None:
+    def __init__(
+        self,
+        bus: I2sBus,
+        config: I2sConfig = default_config,
+        name: str | None = None,
+    ) -> None:
         """Initialize the I2S driver.
 
         Args:
@@ -34,9 +46,11 @@ class I2sDriver:
         """
         raise NotImplementedError("I2S TX/RX coroutine not implemented yet.")
 
-    def add_callback(self, compare_fn) -> None:
-        """Register a callback into the scoreboard."""
+    def add_callback(self, compare_fn: Callable[..., bool]) -> None:
+        """Register a callback into the scoreboard.
+
+        Args:
+            compare_fn: Function to compare expected vs actual data.
+        """
         raise NotImplementedError("Callback mechanism not implemented yet.")
-
-
 

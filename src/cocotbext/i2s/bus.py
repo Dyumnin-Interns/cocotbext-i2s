@@ -1,42 +1,28 @@
+"""I2S bus definition for cocotb."""
 
-"""I2S bus abstraction for cocotb."""
+from __future__ import annotations
 
-from typing import ClassVar
-from cocotb_bus.bus import Bus
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from cocotb.handle import SimHandleBase
 
 
-class I2sBus(Bus):
-    """I2S bus wrapper for cocotb-based simulations."""
+class I2sBus:
+    """Abstraction of the I2S bus for cocotb."""
 
-    _signals: ClassVar[list[str]] = []
-
-    def __init__(
-        self,
-        dut,
-        prefix,
-        *,
-        bus_separator: str = "_",
-        case_insensitive: bool = False,
-        array_idx: int | None = None,
-    ) -> None:
-        """Initialize the I2S bus wrapper.
+    def __init__(self, dut: SimHandleBase, name: str = "i2s") -> None:
+        """Initialize the I2S bus.
 
         Args:
-            dut: The DUT (design under test) instance from cocotb.
-            prefix (str): Prefix for signal names in the DUT.
-            bus_separator (str, optional): Separator between bus name and
-                signal name. Defaults to "_".
-            case_insensitive (bool, optional): Whether to ignore case when
-                looking up signals. Defaults to False.
-            array_idx (int, optional): Index if multiple bus instances exist.
-                Defaults to None.
+            dut (SimHandleBase): The device under test handle from cocotb.
+            name (str, optional): Name of the bus instance. Defaults to "i2s".
         """
-        super().__init__(
-            entity=dut,
-            name=prefix,
-            signals=self._signals,
-            bus_separator=bus_separator,
-            case_insensitive=case_insensitive,
-            array_idx=array_idx,
-        )
+        self.dut = dut
+        self.name = name
+
+        # Example: attach bus signals if they exist
+        self.sck = getattr(dut, f"{name}_sck", None)
+        self.ws = getattr(dut, f"{name}_ws", None)
+        self.sd = getattr(dut, f"{name}_sd", None)
 
