@@ -121,6 +121,7 @@ def check_docs(ctx: Context) -> None:
             mkdocs.build(strict=True, verbose=True),
             title=pyprefix("Building documentation"),
             command="mkdocs build -vs",
+            capture=False,
         )
 
 
