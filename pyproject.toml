@@ -3,7 +3,7 @@ requires= ["pdm-backend"]
 build-backend = "pdm.backend"
 
 [project]
-dynamic = ["version"]
+#dynamic = ["version"]
 requires-python = ">=3.9"
 name = "cocotbext-i2s"
 description = "COCOTB VIP for i2s protocol"
@@ -29,9 +29,9 @@ Documentation = "https://dyumnin.github.io/cocotbext_i2s"
 [tool.pdm]
 distribution = true
 
-[tool.pdm.version]
-source = "scm"
-version_format = "version:format_version"
+#[tool.pdm.version]
+#source = "scm"
+#version_format = "version:format_version"
 
 [tool.pdm.dev-dependencies]
 duty = ["duty>=0.10"]
