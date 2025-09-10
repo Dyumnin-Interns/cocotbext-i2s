@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [feature/pdm_checks]
+  pull_request:
+    branches: [feature/pdm_checks]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install PDM
+        run: pip install pdm
+
+      - name: Install dependencies (including dev)
+        run: pdm install -d
+
+      - name: Run code quality checks
+        run: pdm run duty check-quality
+
+      - name: Run type checks
+        run: pdm run duty check-types
+
+      - name: Check documentation builds
+        run: pdm run duty check-docs
+
+      - name: Run tests
+        run: pdm run duty test match=""
