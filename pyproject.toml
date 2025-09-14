@@ -82,4 +82,5 @@ Documentation = "https://dyumnin.github.io/cocotbext_i2s"
 [dependency-groups]
 dev = [
     "cocotb-bus>=0.2.1",
+    "duty>=1.6.2",
 ]
