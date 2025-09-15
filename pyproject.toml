@@ -83,4 +83,5 @@ Documentation = "https://dyumnin.github.io/cocotbext_i2s"
 dev = [
     "cocotb-bus>=0.2.1",
     "duty>=1.6.2",
+    "git-changelog>=2.6.2",
 ]

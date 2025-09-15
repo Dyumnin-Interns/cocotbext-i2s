@@ -19,7 +19,7 @@ jobs:
           pip install pdm
 
       - name: Install dependencies
-        run: pdm install
+        run: pdm install --dev
 
 #<<<<<<< HEAD
       - name: Run duty task
