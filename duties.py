@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING, Iterator
 from git_changelog.cli import main as git_changelog
 
 from duty import duty
-from duty.callables import coverage, mkdocs, mypy, pytest, ruff
+from duty.callables import coverage, mkdocs, pytest, ruff
 
 if TYPE_CHECKING:
     from duty.context import Context
@@ -126,9 +126,8 @@ def check_docs(ctx: Context) -> None:
 
 
 @duty
-def test(ctx: Context, match: str = "") -> None:
+def test(ctx: Context, match: str = "") -> None:  # noqa: PT028
     """Run the test suite."""
-
     py_version = f"{sys.version_info.major}{sys.version_info.minor}"
     os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
 
@@ -144,7 +143,7 @@ def test(ctx: Context, match: str = "") -> None:
     ctx.run(
         pytest.run(*args),
         title=pyprefix("Running tests"),
-        command=["pytest", *args],  # 👈 ruff-approved
+        command=["pytest", *args],
     )
 
 
