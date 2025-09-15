@@ -35,6 +35,7 @@ git-changelog = ["git-changelog>=2.5.2"]
 ci-quality = [
     "cocotbext_i2s[duty,docs,quality,typing,security]",
     "griffe>=1.5.1",
+    "git-changelog>=2.5.2"   # 👈 add here instead
 ]
 ci-tests = ["cocotbext_i2s[duty,tests]"]
 docs = [
