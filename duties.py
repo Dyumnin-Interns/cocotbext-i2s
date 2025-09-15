@@ -85,6 +85,16 @@ def check_quality(ctx: Context) -> None:
         command=f"ruff check --config config/ruff.toml {PY_SRC}",
     )
 
+@duty(name="check-types")
+def check_types(ctx: Context) -> None:
+    """Check that the code is correctly typed."""
+    ctx.run(
+        ["mypy", *PY_SRC_LIST],
+        title=pyprefix("Checking types"),
+        command=f"mypy {PY_SRC}",
+        capture=False,
+    )
+
 
 @duty
 def check_dependencies(ctx: Context) -> None:
