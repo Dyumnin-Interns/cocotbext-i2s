@@ -37,7 +37,7 @@ ci-quality = [
     "griffe>=1.5.1",
     "git-changelog>=2.5.2"   # 👈 add here instead
 ]
-ci-tests = ["cocotbext_i2s[duty,tests]"]
+ci-tests = ["cocotbext_i2s[duty,tests]","git-changelog>=2.5.2"]
 docs = [
     "black>=23.9",
     "markdown-callouts>=0.3",
