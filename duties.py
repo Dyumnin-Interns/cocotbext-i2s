@@ -145,7 +145,7 @@ def test(ctx: Context, match: str = "") -> None:  # noqa: PT028
         "-n", "auto",
         "-c", "config/pytest.ini",
         "--color=yes",
-        "tests",
+        "./tests",
     ]
     if match:
         args.extend(["-k", match])
