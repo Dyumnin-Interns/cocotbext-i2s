@@ -18,13 +18,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install pdm
 
-      - name: Install dependencies
+      - name: Install dependencies including dev
         run: pdm install --dev
 
-#<<<<<<< HEAD
-      - name: Run duty task
-#=======
       - name: Run duty check-docs
-#>>>>>>> 6af3bcfe (WIP: local changes before rebase)
         run: pdm run duty check-docs
 
