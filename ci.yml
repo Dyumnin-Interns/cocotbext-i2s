@@ -21,6 +21,10 @@ jobs:
       - name: Install dependencies
         run: pdm install
 
+#<<<<<<< HEAD
       - name: Run duty task
+#=======
+      - name: Run duty check-docs
+#>>>>>>> 6af3bcfe (WIP: local changes before rebase)
         run: pdm run duty check-docs
 
