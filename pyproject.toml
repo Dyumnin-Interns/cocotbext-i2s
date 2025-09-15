@@ -31,6 +31,7 @@ distribution = true
 
 [tool.pdm.dev-dependencies]
 duty = ["duty>=0.10"]
+git-changelog = ["git-changelog>=2.5.2"]
 ci-quality = [
     "cocotbext_i2s[duty,docs,quality,typing,security]",
     "griffe>=1.5.1",
