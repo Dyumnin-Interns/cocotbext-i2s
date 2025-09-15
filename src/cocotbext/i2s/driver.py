@@ -53,4 +53,3 @@ class I2sDriver:
             compare_fn: Function to compare expected vs actual data.
         """
         raise NotImplementedError("Callback mechanism not implemented yet.")
-

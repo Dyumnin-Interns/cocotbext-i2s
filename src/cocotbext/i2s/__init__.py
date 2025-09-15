@@ -1,5 +1,3 @@
-
-
 """I2S cocotb extension package.
 
 This package provides I2S (Inter-IC Sound) bus models, drivers,

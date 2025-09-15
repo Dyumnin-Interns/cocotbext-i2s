@@ -11,4 +11,3 @@ class I2sConfig:
 
 #: Default I2S configuration instance.
 default_config = I2sConfig()
-

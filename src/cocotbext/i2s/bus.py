@@ -25,4 +25,3 @@ class I2sBus:
         self.sck = getattr(dut, f"{name}_sck", None)
         self.ws = getattr(dut, f"{name}_ws", None)
         self.sd = getattr(dut, f"{name}_sd", None)
-
