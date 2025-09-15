@@ -126,29 +126,25 @@ def check_docs(ctx: Context) -> None:
 
 
 @duty
-def test(ctx: Context, match: str = "") -> None:  # 👈 default empty string
-    """Run the test suite.
+def test(ctx: Context, match: str = "") -> None:
+    """Run the test suite."""
 
-    Parameters:
-        ctx: The context instance (passed automatically).
-        match: A pytest expression to filter selected tests (optional).
-    """
     py_version = f"{sys.version_info.major}{sys.version_info.minor}"
     os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
 
     args = [
         "-n", "auto",
-        "tests",
         "-c", "config/pytest.ini",
         "--color=yes",
+        "tests",
     ]
-    if match:  # only filter if provided
+    if match:
         args.extend(["-k", match])
 
     ctx.run(
         pytest.run(*args),
         title=pyprefix("Running tests"),
-        command=" ".join(["pytest"] + args),
+        command=["pytest", *args],  # 👈 ruff-approved
     )
 
 
