@@ -153,7 +153,7 @@ def test(ctx: Context, match: str = "") -> None:  # noqa: PT028
     ctx.run(
         pytest.run(*args),
         title=pyprefix("Running tests"),
-        command=["pytest", *args],
+        command=f"pytest {' '.join(args)}",
     )
 
 
