@@ -51,6 +51,7 @@ docs = [
     "mkdocs-minify-plugin>=0.7",
     "mkdocstrings[python]>=0.23",
     'tomli>=2.0; python_version < "3.11"',
+    "git-changelog>=2.5.2",
 ]
 maintain = [
     "black>=23.9",
