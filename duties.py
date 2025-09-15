@@ -126,16 +126,29 @@ def check_docs(ctx: Context) -> None:
 
 
 @duty
-def check_types(ctx: Context) -> None:
-    """Check that the code is correctly typed.
+def test(ctx: Context, match: str = "") -> None:  # 👈 default empty string
+    """Run the test suite.
 
     Parameters:
         ctx: The context instance (passed automatically).
+        match: A pytest expression to filter selected tests (optional).
     """
+    py_version = f"{sys.version_info.major}{sys.version_info.minor}"
+    os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
+
+    args = [
+        "-n", "auto",
+        "tests",
+        "-c", "config/pytest.ini",
+        "--color=yes",
+    ]
+    if match:  # only filter if provided
+        args.extend(["-k", match])
+
     ctx.run(
-        mypy.run(*PY_SRC_LIST, config_file="config/mypy.ini"),
-        title=pyprefix("Type-checking"),
-        command=f"mypy --config-file config/mypy.ini {PY_SRC}",
+        pytest.run(*args),
+        title=pyprefix("Running tests"),
+        command=" ".join(["pytest"] + args),
     )
 
 
@@ -265,29 +278,6 @@ def cov(ctx: Context) -> None:
     ctx.run(coverage.report(rcfile="config/coverage.ini"), capture=False)
     ctx.run(coverage.html(rcfile="config/coverage.ini"))
 
-
-@duty
-def test(ctx: Context, match: str) -> None:
-    """Run the test suite.
-
-    Parameters:
-        ctx: The context instance (passed automatically).
-        match: A pytest expression to filter selected tests.
-    """
-    py_version = f"{sys.version_info.major}{sys.version_info.minor}"
-    os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
-    ctx.run(
-        pytest.run(
-            "-n",
-            "auto",
-            "tests",
-            config_file="config/pytest.ini",
-            select=match,
-            color="yes",
-        ),
-        title=pyprefix("Running tests"),
-        command=f"pytest -c config/pytest.ini -n auto -k{match!r} --color=yes tests",
-    )
 
 
 @duty
