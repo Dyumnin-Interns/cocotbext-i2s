@@ -11,21 +11,20 @@ import random
 
 # Helper task for generating the main system clock
 async def clock_gen(signal):
-    """System Clock Generator"""
+    """System Clock Generator."""
     await cocotb.start(Clock(signal, 10, units="ns").start())
 
 # Helper task for resetting the DUT
 async def reset_dut(reset_signal, duration_ns):
-    """Resets the DUT"""
+    """Resets the DUT."""
     reset_signal.value = 1
     await Timer(duration_ns, units="ns")
     reset_signal.value = 0
     reset_signal._log.info("Reset complete")
 
 # Main test function, parameterized to run multiple scenarios
-async def run_test(dut, data_width=24, master_mode=True):
-    """
-    Main parameterized test function for I2S verification.
+async def run_test(dut, *, data_width=24, master_mode=True):
+    """Main parameterized test function for I2S verification.
 
     Args:
         dut: The design under test.
@@ -37,7 +36,7 @@ async def run_test(dut, data_width=24, master_mode=True):
 
     # Reset the DUT
     await reset_dut(dut.i_rst, 20)
-    
+
     # --- Test Data Generation ---
     # Generate 10 random 24-bit data words for left and right channels
     test_data_left = [random.getrandbits(data_width) for _ in range(10)]
@@ -55,7 +54,7 @@ async def run_test(dut, data_width=24, master_mode=True):
             sclk=dut.o_bclk,
             ws=dut.o_wclk,
             sd=dut.o_sd,
-            data_width=data_width
+            data_width=data_width,
         )
     else:
         dut._log.info("Configuring test for DUT as SLAVE.")
@@ -65,18 +64,8 @@ async def run_test(dut, data_width=24, master_mode=True):
             sclk=dut.i_bclk,
             ws=dut.i_wclk,
             sd=dut.i_sd,
-            data_width=data_width
+            data_width=data_width,
         )
-
-    # Monitor to capture output data for sanity checks (optional but good practice)
-    # This monitor listens to the DUT's output signals
-    monitor = I2sMonitor(
-        dut,
-        sclk=dut.o_bclk,
-        ws=dut.o_wclk,
-        sd=dut.o_sd,
-        data_width=data_width
-    )
 
     # --- DUT Configuration ---
     dut.i_enable.value = 1
@@ -94,10 +83,10 @@ async def run_test(dut, data_width=24, master_mode=True):
             dut.i_valid_data.value = 1
             await RisingEdge(dut.i_clk)
             dut.i_valid_data.value = 0
-            
+
             # Wait for DUT to be ready for the next word
             # A more robust implementation might use a handshake signal
-            await Timer(1, units="us") 
+            await Timer(1, units="us")
 
             # Load right channel data
             dut.i_data.value = test_data_right[i]
@@ -116,7 +105,7 @@ async def run_test(dut, data_width=24, master_mode=True):
         dut._log.info(f"Data received by slave:    {received_data}")
 
         # --- Verification ---
-        assert received_data == interleaved_data, "Mismatch between transmitted and received data"
+        assert received_data == interleaved_data, "Mismatch between transmitted and received data"  # noqa: S101
 
     else: # Slave Mode
         # DUT is Slave, so our testbench Master sends data to it
@@ -124,7 +113,7 @@ async def run_test(dut, data_width=24, master_mode=True):
 
         # Wait for the DUT to process the data
         await Timer(10, units="us")
-        
+
         # Read the received data from the monitor
         # The monitor would have captured the data that the DUT received and processed
         # For this DUT, we assume it loops back or makes data available somehow.
@@ -145,3 +134,4 @@ factory = TestFactory(run_test)
 factory.add_option("data_width", [24, 32]) # Test with 24 and 32 bit data
 factory.add_option("master_mode", [True, False]) # Test both master and slave modes
 factory.generate_tests()
+
