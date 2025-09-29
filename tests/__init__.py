@@ -4,7 +4,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import RisingEdge, Timer
 from cocotb.regression import TestFactory
 
-from cocotbext.i2s.driver import I2sMaster, I2sSlave
+from cocotbext.i2s.driver import I2sMaster, I2sSlave  # type: ignore
 
 import random
 
@@ -133,3 +133,4 @@ factory = TestFactory(run_test)
 factory.add_option("data_width", [24, 32]) # Test with 24 and 32 bit data
 factory.add_option("master_mode", [True, False]) # Test both master and slave modes
 factory.generate_tests()
+
