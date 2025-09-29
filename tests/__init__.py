@@ -7,8 +7,8 @@ from cocotbext.i2s.driver import I2sMaster, I2sSlave  # type: ignore
 
 import random
 import os
-import pytest
-from cocotb_test.simulator import run
+import pytest  # type: ignore
+from cocotb_test.simulator import run  # type: ignore
 
 
 # Helper task for generating the main system clock
