@@ -1,57 +1,58 @@
-"""Tests package for cocotbext-i2s."""
-import cocotb
-from cocotb.clock import Clock
-from cocotb.triggers import RisingEdge, Timer
+"""Cocotb testbench for the I2S core."""
 
+from __future__ import annotations
+
+import os
+import random
+
+import cocotb
+import pytest
+from cocotb.clock import Clock
+from cocotb.runner import run
+from cocotb.triggers import RisingEdge, Timer
 from cocotbext.i2s.driver import I2sMaster, I2sSlave  # type: ignore
 
-import random
-import os
-import pytest  # type: ignore
-from cocotb_test.simulator import run  # type: ignore
 
-
-# Helper task for generating the main system clock
+# Helper task for generating the main system clock.
 async def clock_gen(signal):
     """System Clock Generator."""
     await cocotb.start(Clock(signal, 10, units="ns").start())
 
 
-# Helper task for resetting the DUT
+# Helper task for resetting the DUT.
 async def reset_dut(reset_signal, duration_ns):
     """Resets the DUT."""
     reset_signal.value = 1
     await Timer(duration_ns, units="ns")
     reset_signal.value = 0
-    reset_signal._log.info("Reset complete")
+    await RisingEdge(reset_signal.parent.i_clk)
 
 
-# Main cocotb test logic
 @cocotb.test()
 async def i2s_test_logic(dut):
-    """Main parameterized test function for I2S verification."""
-    # Get parameters from environment variables set by the pytest runner
-    data_width = int(os.getenv("DATA_WIDTH", "24"))
-    master_mode = os.getenv("MASTER_MODE", "true").lower() == "true"
+    """Main parameterized test logic for I2S verification."""
+    # Retrieve parameters from the environment
+    data_width = int(os.environ.get("DATA_WIDTH", "24"))
+    master_mode = os.environ.get("MASTER_MODE", "true").lower() == "true"
 
-    # Start the system clock
+    # Start the system clock.
     await clock_gen(dut.i_clk)
 
-    # Reset the DUT
+    # Reset the DUT.
     await reset_dut(dut.i_rst, 20)
 
     # --- Test Data Generation ---
-    # Generate 10 random data words for left and right channels
-    test_data_left = [random.getrandbits(data_width) for _ in range(10)]
-    test_data_right = [random.getrandbits(data_width) for _ in range(10)]
-    # We interleave them for transmission, similar to how I2S works
-    interleaved_data = [val for pair in zip(test_data_left, test_data_right) for val in pair]
+    # Generate 10 random data words for left and right channels.
+    left_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]
+    right_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]
+    interleaved_data = []
+    for l, r in zip(left_channel_data, right_channel_data):
+        interleaved_data.extend([l, r])
 
-    # --- Verification Component Initialization ---
+    # --- Driver and Monitor Setup ---
     if master_mode:
-        dut._log.info("Configuring test for DUT as MASTER.")
-        # DUT is Master, so testbench needs a Slave to receive data
-        i2s_peripheral = I2sSlave(
+        # DUT is Master, Testbench is Slave
+        tb_driver = I2sSlave(
             dut,
             sclk=dut.o_bclk,
             ws=dut.o_wclk,
@@ -59,9 +60,8 @@ async def i2s_test_logic(dut):
             data_width=data_width,
         )
     else:
-        dut._log.info("Configuring test for DUT as SLAVE.")
-        # DUT is Slave, so testbench needs a Master to provide clocks and data
-        i2s_peripheral = I2sMaster(
+        # DUT is Slave, Testbench is Master
+        tb_driver = I2sMaster(
             dut,
             sclk=dut.i_bclk,
             ws=dut.i_wclk,
@@ -69,52 +69,39 @@ async def i2s_test_logic(dut):
             data_width=data_width,
         )
 
-    # --- DUT Configuration ---
-    dut.i_enable.value = 1
-    dut.i_mode.value = 0 if master_mode else 1  # 0 for Master, 1 for Slave
-
     # --- Test Execution ---
-    await RisingEdge(dut.i_clk)
-
-    if master_mode:
-        # DUT is Master, we need to provide it with data to transmit
-        for i in range(len(test_data_left)):
-            dut.i_data.value = test_data_left[i]
+    if master_mode:  # Master Mode
+        # In master mode, we provide data to the DUT and let it transmit.
+        # We then use the testbench's slave driver to receive it.
+        for left, right in zip(left_channel_data, right_channel_data):
+            # Load left channel data
+            dut.i_left_chan_data.value = left
+            dut.i_right_chan_data.value = right
             dut.i_valid_data.value = 1
             await RisingEdge(dut.i_clk)
             dut.i_valid_data.value = 0
             await Timer(1, units="us")
 
-            dut.i_data.value = test_data_right[i]
-            dut.i_valid_data.value = 1
-            await RisingEdge(dut.i_clk)
-            dut.i_valid_data.value = 0
-            await Timer(1, units="us")
-
-        # Now, receive the data using our I2S Slave driver
-        received_data = []
-        for _ in range(len(interleaved_data)):
-            data_word = await i2s_peripheral.recv_word()
-            received_data.append(data_word)
-
-        dut._log.info(f"Original interleaved data: {interleaved_data}")
-        dut._log.info(f"Data received by slave:    {received_data}")
+        # Wait for transmission to complete and receive the data.
+        await Timer(10, units="us")
+        received_data = tb_driver.recv()
 
         # --- Verification ---
-        assert received_data == interleaved_data, "Mismatch between transmitted and received data"  # noqa: S101
+        assert received_data == interleaved_data, "Mismatch between transmitted and received data."
 
     else:  # Slave Mode
-        # DUT is Slave, so our testbench Master sends data to it
-        await i2s_peripheral.write(interleaved_data)
+        # In slave mode, the testbench master drives the data to the DUT.
+        await tb_driver.write(interleaved_data)
+
+        # Wait for the DUT to process the data.
         await Timer(10, units="us")
-        dut._log.warning("Slave receive check relies on waveform analysis as DUT has no output path for received data.")
 
-    await Timer(50, units="us")
-    dut._log.info("Test finished successfully.")
+        # In a real scenario, you would read back from DUT internal signals/registers
+        # to verify correct reception. This part is DUT-specific.
+        dut._log.info("Slave mode test completed. Verification depends on DUT implementation.")
 
 
-# --- Pytest Test Runner ---
-# This function is discovered by pytest. It runs the simulation and passes parameters.
+# Pytest runner
 @pytest.mark.parametrize("data_width", [24, 32])
 @pytest.mark.parametrize("master_mode", [True, False])
 def test_i2s_runner(data_width, master_mode):
@@ -131,10 +118,11 @@ def test_i2s_runner(data_width, master_mode):
     run(
         vhdl_sources=vhdl_sources,
         toplevel="i2s_simple",
-        module="test_i2s",  # Name of this python file
+        module="tests",
         toplevel_lang="vhdl",
         generics={"G_NBITS": data_width},
         extra_env=sim_env,
-        testcase="i2s_test_logic",  # Name of the cocotb test function to run
+        testcase="i2s_test_logic",
+        # Use GHDL simulator for VHDL files
+        simulator="ghdl",
     )
-
