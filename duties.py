@@ -141,12 +141,11 @@ def test(ctx: Context, match: str = "") -> None:  # noqa: PT028
     py_version = f"{sys.version_info.major}{sys.version_info.minor}"
     os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
 
-    # The '-c' argument has been removed to allow pytest to
-    # run from the project root and discover the tests correctly.
+    # The explicit './tests' path has been removed to allow pytest
+    # to use its default discovery mechanism, which is more robust.
     args = [
         "-n", "auto",
         "--color=yes",
-        "./tests",
     ]
     if match:
         args.extend(["-k", match])
@@ -309,3 +308,4 @@ def vscode(ctx: Context) -> None:
 
     for filename in ("launch.json", "settings.json", "tasks.json"):
         ctx.run(update_config, args=[filename], title=f"Update .vscode/{filename}")
+
