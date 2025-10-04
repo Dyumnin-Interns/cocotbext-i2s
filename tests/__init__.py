@@ -6,9 +6,9 @@ import os
 import random
 
 import cocotb
-import pytest
+import pytest  # type: ignore
 from cocotb.clock import Clock
-from cocotb.runner import run
+from cocotb.runner import run  # type: ignore
 from cocotb.triggers import RisingEdge, Timer
 from cocotbext.i2s.driver import I2sMaster, I2sSlave  # type: ignore
 
