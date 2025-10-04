@@ -8,8 +8,8 @@ import random
 import cocotb
 import pytest  # type: ignore
 from cocotb.clock import Clock
-from cocotb.runner import run  # type: ignore
 from cocotb.triggers import RisingEdge, Timer
+from cocotb_test.simulator import run  # type: ignore
 from cocotbext.i2s.driver import I2sMaster, I2sSlave  # type: ignore
 
 
