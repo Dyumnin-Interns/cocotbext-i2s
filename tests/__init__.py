@@ -43,11 +43,11 @@ async def i2s_test_logic(dut):
 
     # --- Test Data Generation ---
     # Generate 10 random data words for left and right channels.
-    left_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]
-    right_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]
+    left_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]  # noqa: S311
+    right_channel_data = [random.randint(0, (2**data_width) - 1) for _ in range(10)]  # noqa: S311
     interleaved_data = []
-    for l, r in zip(left_channel_data, right_channel_data):
-        interleaved_data.extend([l, r])
+    for left_val, right_val in zip(left_channel_data, right_channel_data):
+        interleaved_data.extend([left_val, right_val])
 
     # --- Driver and Monitor Setup ---
     if master_mode:
@@ -87,7 +87,7 @@ async def i2s_test_logic(dut):
         received_data = tb_driver.recv()
 
         # --- Verification ---
-        assert received_data == interleaved_data, "Mismatch between transmitted and received data."
+        assert received_data == interleaved_data, "Mismatch between transmitted and received data."  # noqa: S101
 
     else:  # Slave Mode
         # In slave mode, the testbench master drives the data to the DUT.
