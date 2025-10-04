@@ -141,9 +141,10 @@ def test(ctx: Context, match: str = "") -> None:  # noqa: PT028
     py_version = f"{sys.version_info.major}{sys.version_info.minor}"
     os.environ["COVERAGE_FILE"] = f".coverage.{py_version}"
 
+    # The '-c' argument has been removed to allow pytest to
+    # run from the project root and discover the tests correctly.
     args = [
         "-n", "auto",
-        "-c", "config/pytest.ini",
         "--color=yes",
         "./tests",
     ]
