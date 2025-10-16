@@ -77,7 +77,7 @@ jobs:
       run: pdm lock -v --no-cross-platform -G ci-tests
 
     - name: Install dependencies
-      run: pdm install --no-editable -G ci-tests
+      run: pdm install -G ci-tests
 
     - name: Install Icarus Verilog
       run: sudo apt install -y --no-install-recommends iverilog
@@ -91,6 +91,7 @@ jobs:
       run: pdm run duty test
       env:
         PYTHONPATH: src
+
 
 
 
