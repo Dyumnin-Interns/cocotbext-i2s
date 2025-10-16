@@ -1,0 +1,27 @@
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Your steps to set up Python and install dependencies...
+      - name: Set up Python
+        uses: actions/setup-python@v4
+      - name: Install dependencies
+        run: pipx install pdm && pdm install
+
+      # -----------------------------------------------------------
+      # ▼ ADD THIS STEP TO INSTALL THE GHDL SIMULATOR ▼
+      # -----------------------------------------------------------
+      - name: Install GHDL
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghdl
+      # -----------------------------------------------------------
+      # ▲ END OF THE NEW STEP ▲
+      # -----------------------------------------------------------
+
+      - name: Run tests
+        run: pdm run duty test
