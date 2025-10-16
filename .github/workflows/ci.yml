@@ -86,11 +86,19 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y ghdl
+        
+    - name: List source files for debugging
+      run: |
+        echo "Current working directory: $(pwd)"
+        echo "Listing contents of the project root:"
+        ls -lR .
 
     - name: Run the test suite
       run: pdm run duty test
       env:
         PYTHONPATH: src
+
+
 
 
 
